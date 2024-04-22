@@ -4,11 +4,10 @@ import { useBrowser } from "./context/browserContext";
 import { images } from "./db/images";
 import Home from "./pages/Home/Home";
 import Task from "./pages/Task/Task";
+const index = Math.floor(Math.random() * images.length);
+const bgImage = images[index].image;
 function App() {
-  const index = Math.floor(Math.random() * images.length);
-  const bgImage = images[index].image;
   const { name, browserDispatch } = useBrowser();
-  console.log("name-", name);
   useEffect(() => {
     const userName = localStorage.getItem("name");
     browserDispatch({

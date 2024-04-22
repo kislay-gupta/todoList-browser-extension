@@ -20,7 +20,7 @@ function Home() {
       <div className="user-details d-flex direction-column gap">
         <span className="heading-1">Hello, what&apos;s your name</span>
         <form onSubmit={handleFormSubmit}>
-          <input className="input" onKeyPress={handleNameChange} />
+          <input required className="input" onKeyPress={handleNameChange} />
         </form>
       </div>
     </div>
