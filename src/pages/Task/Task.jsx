@@ -1,15 +1,24 @@
 import "./task.css";
 import { useBrowser } from "../../context/browserContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { quotes } from "../../db/quotes";
+const index = Math.floor(Math.random() * quotes.length);
+const quote = quotes[index].quote;
 function Task() {
+  const [isChecked, setIsChecked] = useState(false);
   const { name, time, message, task, browserDispatch } = useBrowser();
   useEffect(() => {
-    const userTask = localStorage.setItem("task");
+    const userTask = localStorage.getItem("task");
     browserDispatch({
       type: "TASK",
       payload: userTask,
     });
   }, []);
+  useEffect(() => {
+    const checkedStatus = localStorage.getItem("checkedStatus");
+    checkedStatus === "true" ? setIsChecked(true) : setIsChecked(false);
+  }, []);
+
   useEffect(() => {
     getCurrentTime();
   }, [time]);
@@ -41,8 +50,24 @@ function Task() {
       localStorage.setItem("data", new Date.getDate());
     }
   };
+  const handleOnCompleteTaskChange = (event) => {
+    if (event.target.checked) {
+      setIsChecked((isChecked) => !isChecked);
+    } else {
+      setIsChecked((isChecked) => !isChecked);
+    }
+    localStorage.setItem("checkedStatus", !isChecked);
+  };
   const handleFormSubmit = (event) => {
     event.preventDefault();
+  };
+  const handleClearClick = () => {
+    browserDispatch({
+      type: "CLEAR",
+    });
+    setIsChecked(false);
+    localStorage.removeItem("task");
+    localStorage.removeItem("checkedStatus");
   };
   // console.log(time);
   return (
@@ -66,15 +91,33 @@ function Task() {
         </>
       ) : (
         <>
-          <div className="user-task-container">
+          <div className="user-task-container d-flex direction-column align-center gap-sm">
             <span className="heading-2">Today&apos;s focus</span>
-          </div>
-          <div>
-            <input id="checkbox" type="checkbox" />
-            <label htmlFor="checkbox">{task}</label>
+            <div className="d-flex align-center gap">
+              <label
+                className={`${
+                  isChecked ? "strike-through" : ""
+                } d-flex heading-3 align-center gap-sm cursor`}
+              >
+                <input
+                  className="check cursor"
+                  type="checkbox"
+                  onChange={handleOnCompleteTaskChange}
+                  checked={isChecked}
+                />
+
+                {task}
+              </label>
+              <button className="button cursor" onClick={handleClearClick}>
+                <span className="material-icons-outlined">close</span>
+              </button>
+            </div>
           </div>
         </>
       )}
+      <div className="quote-container">
+        <span className="heading-3">{quote}</span>
+      </div>
     </div>
   );
 }

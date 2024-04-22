@@ -25,6 +25,11 @@ export const browserReducer = (state, { type, payload }) => {
         ...state,
         task: payload,
       };
+    case "CLEAR":
+      return {
+        ...state,
+        task: null,
+      };
     default:
       return state;
   }
