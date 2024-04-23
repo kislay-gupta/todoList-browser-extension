@@ -1,7 +1,7 @@
 import { useBrowser } from "../../context/browserContext";
 import "./home.css";
 function Home() {
-  const { name, browserDispatch } = useBrowser();
+  const { browserDispatch } = useBrowser();
   const handleFormSubmit = (event) => {
     event.preventDefault();
   };

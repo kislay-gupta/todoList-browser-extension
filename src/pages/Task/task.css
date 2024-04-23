@@ -44,3 +44,10 @@
   position: absolute;
   bottom: 3rem;
 }
+.todo-btn-container {
+  right: 3rem;
+  bottom: 3.5rem;
+}
+.todo-btn {
+  font-size: 2rem;
+}

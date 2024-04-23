@@ -2,10 +2,12 @@ import "./task.css";
 import { useBrowser } from "../../context/browserContext";
 import { useEffect, useState } from "react";
 import { quotes } from "../../db/quotes";
+import Todo from "../../components/todo/Todo";
 const index = Math.floor(Math.random() * quotes.length);
 const quote = quotes[index].quote;
 function Task() {
   const [isChecked, setIsChecked] = useState(false);
+  const [isTodoOpen, setIsTodoOpen] = useState(false);
   const { name, time, message, task, browserDispatch } = useBrowser();
   useEffect(() => {
     const userTask = localStorage.getItem("task");
@@ -13,6 +15,11 @@ function Task() {
       type: "TASK",
       payload: userTask,
     });
+    if (new Date().getDate() !== Number(localStorage.getItem("date"))) {
+      localStorage.removeItem("task");
+      localStorage.removeItem("date");
+      localStorage.removeItem("checkedStatus");
+    }
   }, []);
   useEffect(() => {
     const checkedStatus = localStorage.getItem("checkedStatus");
@@ -47,7 +54,7 @@ function Task() {
         payload: event.target.value,
       });
       localStorage.setItem("task", event.target.value);
-      localStorage.setItem("data", new Date.getDate());
+      localStorage.setItem("date", new Date.getDate());
     }
   };
   const handleOnCompleteTaskChange = (event) => {
@@ -69,9 +76,12 @@ function Task() {
     localStorage.removeItem("task");
     localStorage.removeItem("checkedStatus");
   };
+  const handleToDoClick = () => {
+    setIsTodoOpen(!isTodoOpen);
+  };
   // console.log(time);
   return (
-    <div className="task-container d-flex direction-column align-center gap">
+    <div className="task-container d-flex direction-column relative align-center gap">
       <span className="time">{time} </span>
       <span className="message">
         {message}, {name}
@@ -117,6 +127,12 @@ function Task() {
       )}
       <div className="quote-container">
         <span className="heading-3">{quote}</span>
+      </div>
+      {isTodoOpen && <Todo />}
+      <div className="todo-btn-container  absolute">
+        <button className="button todo-btn" onClick={handleToDoClick}>
+          ToDO
+        </button>
       </div>
     </div>
   );
